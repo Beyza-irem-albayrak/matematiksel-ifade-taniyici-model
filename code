@@ -1,0 +1,43 @@
+import re
+
+def check_valid_expression(expression):
+    pattern = r'^[\d\s\(\)\+\-\*\/]+$'
+
+    # Girilen ifade desene uyuyor mu kontrol et
+    if not re.match(pattern, expression):
+        return False
+
+    # Parantez eşleşmelerini kontrol et
+    stack = []
+    for char in expression:
+        if char == '(':
+            stack.append(char)
+        elif char == ')':
+            if not stack:
+                return False
+            stack.pop()
+
+    # Parantez eşleşmeleri tam mı kontrol et
+    if stack:
+        return False
+
+    # 0'a bölme işlemini kontrol et
+    if re.search(r'\s*\/\s*0', expression):
+        return False
+
+    # Ardışık operatörleri kontrol et
+    if re.search(r'[\+\-\\/]\s[\+\-\*\/]', expression):
+        return False
+
+    return True
+
+# Kaç tane ifade gireceğini kullanıcıya sor
+num_of_inputs = int(input("Kaç tane ifade girmek istiyorsunuz? "))
+
+# Ifadeleri kontrol et
+for i in range(num_of_inputs):
+    expression = input(f"{i+1}. ifadeyi girin: ")
+    if check_valid_expression(expression):
+        print(f"'{expression}' matematiksel bir ifadedir.")
+    else:
+        print(f"'{expression}' matematiksel bir ifade değildir.")
